@@ -1,2 +1,2 @@
-# myKBS
-KBS for AI course
+# expert-system
+expert-system for AI course
