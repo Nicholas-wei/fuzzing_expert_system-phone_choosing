@@ -1,7 +1,18 @@
-import xlrd
+class expert:
+    budget = 0
+    main_usage = []
+    exclude_v = []
+    special_v = []
+    focus_num = 0
 
+    X = 0 # 性能
+    Y = 0 # 外观
+    Z = 0 # 实用
+   
+    def init(self,budget,usage,exclude,special,focus):
+        expert.budget = budget
+        expert.main_usage = usage
+        expert.exclude_v = exclude
+        expert.special_v = special
+        expert.focus_num = focus
 
-book = xlrd.open_workbook('E:\大三下\人工智能\data.xls')
-sheet = book.sheet_by_name('Sheet1')
-for i in range(sheet.nrows):
-    print(sheet.row_values(i))
