@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Dialog(object):
-    def setupUi(self, Dialog,pic_path,argu_info,reason):
+    def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(818, 561)
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
@@ -43,4 +43,4 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "参数信息"))
         self.label_3.setText(_translate("Dialog", "推断原因"))
         self.pushButton.setText(_translate("Dialog", "OK"))
-import phone_qr_rc
+#import phone_qr_rc

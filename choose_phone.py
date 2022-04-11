@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'choose_phone.ui'
+# Form implementation generated from reading ui file './choose_phone.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -21,7 +21,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -461, 775, 1000))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 775, 1000))
         self.scrollAreaWidgetContents.setMinimumSize(QtCore.QSize(750, 1000))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -176,9 +176,9 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p><center><span style=\" font-size:16pt; font-weight:600;\">请告诉我们您的需求</span></center></p></body></html>"))
         self.radioButton_5.setText(_translate("Dialog", "4000元以上"))
-        self.radioButton_3.setText(_translate("Dialog", "2000元到3000元"))
-        self.radioButton_4.setText(_translate("Dialog", "3000元到4000元"))
-        self.radioButton_2.setText(_translate("Dialog", "1000元到2000元"))
+        self.radioButton_3.setText(_translate("Dialog", "3000元以下"))
+        self.radioButton_4.setText(_translate("Dialog", "4000元以下"))
+        self.radioButton_2.setText(_translate("Dialog", "2000元以下"))
         self.radioButton.setText(_translate("Dialog", "1000元以下"))
         self.label_2.setText(_translate("Dialog", "1.您购买手机的预算是多少(单选)"))
         self.checkBox_2.setText(_translate("Dialog", "日常使用(追剧、聊天)"))

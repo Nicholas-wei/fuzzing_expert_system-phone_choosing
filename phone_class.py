@@ -1,5 +1,15 @@
 import xlrd
 MAXPHONE=100 # 最多支持100部手机
+from functools import cmp_to_key
+
+
+def cmp(a,b):
+    if a.final_score < b.final_score:
+        return -1
+    else:
+        return 1
+
+
 class phone_class():
     name = ""
     price = 0
@@ -27,6 +37,14 @@ class phone_class():
     X = 0
     Y = 0
     Z = 0
+
+    
+
+    
+    final_score = 0
+
+
+
     def init_phone_data(self,index):
         '''
         读取当前手机的excel数据，记录在本地.index代表行数
@@ -57,7 +75,10 @@ class phone_class():
         self.game = info_index[20]
         self.special = info_index[21]
 
-    
+   
+    def getresult():
+        return self.final_score
+
     def calculate_score(self):
         '''
         静态计算手机自身得分，储存在本地变量X，Y，Z里面
@@ -232,6 +253,83 @@ class all_phone:
             print("外观指数: " + str(item.Y))
             print("实用指数:" + str(item.Z))
             print("\n")
+    def recommand_index(self,case):
+        '''
+        根据专家系统算出来的结果计算推荐系数,case为传入的专家系统的参数
+        '''
+        for item in all_phone.all:
+            item.X = item.X * case[0] # 性能
+            item.Y = item.Y * case[1] # 外观指数
+            item.Z = item.Z * case[2] # 实用指数
+        print("处理推荐指数完成")
+
+    
+
+
+    def wrap_arrange(self,case,budget,G5,curve,icon_case,nfc):
+        '''
+        对已经计算好推荐指数的手机做最后的筛选，根据用户输入的是否需要5G，nfc,品牌，曲面屏等参数
+        '''
+        self.read_all_phone()
+        self.set_all_medium()
+        self.calculate_all_argument()
+        self.recommand_index(case) # case 是专家系统传来的参数
+        result_case = []
+        for item in self.all:
+            # 根据用户特定需求筛选价格
+            if(budget == 1):
+                # 0到1000
+                if(item.price < 1000):
+                    result_case.append(item)
+            elif(budget == 2):
+                # 2000以下
+                if(item.price < 2000):
+                    result_case.append(item)
+            elif(budget == 3):
+                # 3000以下
+                if(item.price < 3000):
+                    result_case.append(item)
+            elif(budget == 4):
+                # 3000以下
+                if(item.price < 4000):
+                    result_case.append(item)
+            elif(budget == 5):
+                result_case.append(item)
+
+        # 在价格需求中选择包含5G
+        for item in result_case:
+            if(G5 == 1):
+                # 要求5G
+                if(item.band_width != '5G'):
+                    result_case.remove(item)
+
+            if(curve == 1):
+                # 要求曲面屏
+                if(item.curve!=1):
+                    result_case.remove(item)
+
+            if(nfc == 1):
+                # 要求nfc
+                if(item.NFC !=1):
+                    result_case.remove(item)
+
+            if(len(icon_case)!=0):
+                # 去除相应品牌
+                if(item.icon in icon_case):
+                    result_case.remove(item)
+
+        # 最后得到result_case，将其按照得分高度排序,只推荐得分最高的
+        for item in result_case:
+            item.final_score = item.X + item.Y + item.Z
+        result_case.sort(key=cmp_to_key(cmp))
+        result_case.reverse()
+
+        return result_case
+
+
+
+
+
 if __name__ == "__main__":
     all_phone_class = all_phone()
     all_phone_class.read_all_phone()

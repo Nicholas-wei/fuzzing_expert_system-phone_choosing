@@ -23,7 +23,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-461</y>
+        <y>0</y>
         <width>775</width>
         <height>1000</height>
        </rect>
@@ -70,7 +70,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>2000元到3000元</string>
+        <string>3000元以下</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButton_4">
@@ -83,7 +83,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>3000元到4000元</string>
+        <string>4000元以下</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButton_2">
@@ -96,7 +96,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>1000元到2000元</string>
+        <string>2000元以下</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButton">
