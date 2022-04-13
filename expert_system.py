@@ -211,6 +211,10 @@ class expert:
             then c = (prefer appear)
         if x is pre_uasge[1] or x is pre_game[2]:
             then c = (prefer game)
+        if x is pre_usage[1] or x is pre_game[1]:
+            then c = (prefer usage)
+        if x is pre_usage[2] or x is pre_apper[0]:
+            then c = (prefer usage)
         '''
         prefer_case = [0,0,0] # 存放了偏好值的数组,[性能、外观、实用]
         # 规则1
@@ -225,7 +229,10 @@ class expert:
         prefer_case[1] +=max(pre_usage[0],pre_appea[1])
         # 规则6
         prefer_case[0] += max(pre_usage[1],pre_game[2])
-
+        # 规则7
+        prefer_case[2] += max(pre_usage[1],pre_game[1])
+        # 规则8
+        prefer_case[2] +=max(pre_usage[2],pre_appea[0])
         # 这里输出的prefer_case就是最后专家系统的输出参数。
 
         return prefer_case

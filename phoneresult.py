@@ -12,15 +12,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Dialog(object):
-    def setupUi(self, Dialog):
+    def setupUi(self, Dialog,pic_name,rec_reason,rec_formula):
         Dialog.setObjectName("Dialog")
         Dialog.resize(818, 561)
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.label_2 = QtWidgets.QLabel(Dialog)
+        self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 0, 0, 3, 1)
         self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setWordWrap(True)
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 1, 1, 1, 1)
         self.pushButton = QtWidgets.QPushButton(Dialog)
@@ -30,17 +32,20 @@ class Ui_Dialog(object):
         self.label.setMinimumSize(QtCore.QSize(394, 249))
         self.label.setMaximumSize(QtCore.QSize(394, 249))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(":/redmi9a/phone_image_changed/redmi9a.jpg"))
+        # pic_str1 = ":/redmi9a/phone_image_changed/"  + pic_name+ ".jpeg"
+        pic_str = "E:\\phone_image_changed\\" + pic_name+ ".jpeg"
+        print("输出图片:" + pic_str)
+        self.label.setPixmap(QtGui.QPixmap(pic_str))
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
 
-        self.retranslateUi(Dialog)
+        self.retranslateUi(Dialog,rec_reason,rec_formula) # 这里需要传入原因信息，函数在下面
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, Dialog,reason,formula):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_2.setText(_translate("Dialog", "参数信息"))
-        self.label_3.setText(_translate("Dialog", "推断原因"))
+        self.label_2.setText(_translate("Dialog", reason))
+        self.label_3.setText(_translate("Dialog", formula))
         self.pushButton.setText(_translate("Dialog", "OK"))
-#import phone_qr_rc
+# import phone_qr_rc

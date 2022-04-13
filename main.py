@@ -10,7 +10,7 @@ import expert_system
 import phone_class
 
 price_option = 0
-
+argu_case = []
 
 class MainWindow(QtWidgets.QMainWindow, welcome_ui):
     '''
@@ -33,18 +33,7 @@ class MainWindow(QtWidgets.QMainWindow, welcome_ui):
         self.add_signal.emit()
 
 
-class reference_window(QtWidgets.QDialog,phone_result):
-    '''
-    手机推荐界面
-    '''
-    back_signal = QtCore.pyqtSignal()
-    def __init__(self):
-        super(reference_window,self).__init__()
-        self.setupUi(self)
-        self.pushButton.clicked.connect(self.back_main)
 
-    def back_main(self):
-        self.back_signal.emit()
 
 
 class ChooseWindow(QtWidgets.QDialog,choose_ui):
@@ -210,6 +199,30 @@ class ChooseWindow(QtWidgets.QDialog,choose_ui):
         
         
 
+def form_reason(phone_list):
+    buf = ""
+    buf+="您的最佳推荐：\n"
+    buf+="手机名: " + phone_list[0].name + '\n'
+    buf+="价格: " + str(phone_list[0].price) + '元\n'
+    buf+="CPU 品牌: " + phone_list[0].CPU_brand + '\n'
+    buf+="CPU 跑分: " + str(phone_list[0].CPU_mark) + '\n'
+    buf+="像素: " + str(phone_list[0].resolution) + '\n'
+    buf+="电量: " + str(phone_list[0].power) + '\n'
+    buf+="充电功率: " + str(phone_list[0].charging)+'W\n'
+    buf+=phone_list[0].special
+    return buf
+
+
+def form_formula(phone_list,pref_result):
+    buf = ""
+    buf+="您的喜好指数为: " + '\n'
+    buf+="性能:" + str(pref_result[0]) + '\n'
+    buf+="外观: " + str(pref_result[1]) + '\n'
+    buf+="实用: " + str(pref_result[2]) + '\n'
+    print(buf)
+    return buf
+
+
 
 class Controller:
     '''
@@ -235,6 +248,8 @@ class Controller:
 
     def show_reference(self):
         self.ref = reference_window()
+        self.choose.close()
+        self.ref.show()
 
     def show_all(self):
         pass
@@ -261,7 +276,7 @@ class Controller:
             window_argu.exclude_name_list.append("iQOO")
         if(window_argu.exclude_v[5] == 1):
             window_argu.exclude_name_list.append("Samsung")
-        self.refer_window = reference_window()
+        
         # 专家系统处理
         expert = expert_system.expert()
         pref_result = expert.expert_interface(window_argu.budget_pre,window_argu.main_usage,window_argu.exclude_v,window_argu.special_v,window_argu.focus_num)
@@ -270,10 +285,30 @@ class Controller:
         recommend_list = phone_choose.wrap_arrange(pref_result,window_argu.budget_pre,window_argu.special_v[6],window_argu.special_v[10],window_argu.exclude_name_list,window_argu.special_v[9])
         self.choose.close()
         # 这里需要给reference_window传递参数，用于动态显示 **TODO tomorrow**
+        global argu_case
+        argu_case.append(recommend_list[0].name)
+        recommend_reason = form_reason(recommend_list)
+        formula = form_formula(recommend_list,pref_result)
+        argu_case.append(recommend_reason)
+        argu_case.append(formula)
+        self.refer_window = reference_window(argu_case)
         self.refer_window.show()
-        self.refer_window.pushButton.connect(self.show_welcome) # 返回主界面
+        self.refer_window.back_signal.connect(self.show_welcome) # 返回主界面
+        # self.refer_window.close()
 
+class reference_window(QtWidgets.QDialog,phone_result):
+    '''
+    手机推荐界面
+    '''
+    back_signal = QtCore.pyqtSignal()
+    def __init__(self,argu_case):
+        super(reference_window,self).__init__()
+        # setup UI这里传入(self,图片名，推荐原因，推荐公式)
+        self.setupUi(self,argu_case[0],argu_case[1],argu_case[2])
+        self.pushButton.clicked.connect(self.back_main)
 
+    def back_main(self):
+        self.back_signal.emit()
 
 
 def main():
