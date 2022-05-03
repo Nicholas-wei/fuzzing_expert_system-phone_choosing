@@ -198,44 +198,49 @@ class expert:
         # 得到了关于性能、外观、实用性的低中高评价之后，开始设计参数
         # 这里用到if-else推理
         '''
-        规则集如下
-        if x is pre_appea[2] or y is pre_game[0]
-            then c = (prefer appear)
-        if x is pre_appea[1] or y is pre_usage[2]
-            then c = (prefer usage)
-        if x is pre_appea[0] or y is pre_game[2]
-            then c = (prefer game)
-        if x is pre_usage[2] or x is pre_game[1]:
-            then c = (prefer usage)
-        if x is pre_usage[0] or x is pre_appea[1]:
-            then c = (prefer appear)
-        if x is pre_uasge[1] or x is pre_game[2]:
-            then c = (prefer game)
-        if x is pre_usage[1] or x is pre_game[1]:
-            then c = (prefer usage)
-        if x is pre_usage[2] or x is pre_apper[0]:
-            then c = (prefer usage)
+        规则集见专家系统报告
         '''
-        prefer_case = [0,0,0] # 存放了偏好值的数组,[性能、外观、实用]
-        # 规则1
-        prefer_case[1] +=max(pre_appea[2],pre_game[0])
-        # 规则2
-        prefer_case[2] +=max(pre_appea[1],pre_usage[2])
-        # 规则3
-        prefer_case[0] +=max(pre_appea[0],pre_game[2])
-        # 规则4
-        prefer_case[2] +=max(pre_usage[2] ,pre_game[1])
-        # 规则5
-        prefer_case[1] +=max(pre_usage[0],pre_appea[1])
-        # 规则6
-        prefer_case[0] += max(pre_usage[1],pre_game[2])
-        # 规则7
-        prefer_case[2] += max(pre_usage[1],pre_game[1])
-        # 规则8
-        prefer_case[2] +=max(pre_usage[2],pre_appea[0])
+        pref_case = [0,0,0] # 存放了偏好值的数组,[性能、外观、实用]
+        pref_case_wrap = [0,0,0,0,0,0] # U,UA,A,PA,P,PU
+        pref_case_wrap[0] += min(pre_game[0],pre_appea[0],pre_usage[0])
+        pref_case_wrap[0] += min(pre_game[0],pre_appea[0],pre_usage[1])
+        pref_case_wrap[0] += min(pre_game[0],pre_appea[0],pre_usage[2])
+        pref_case_wrap[1] += min(pre_game[0],pre_appea[1],pre_usage[0])
+        pref_case_wrap[2] += min(pre_game[0],pre_appea[1],pre_usage[1])
+        pref_case_wrap[1] += min(pre_game[0],pre_appea[1],pre_usage[2])
+        pref_case_wrap[2] += min(pre_game[0],pre_appea[2],pre_usage[0])
+        pref_case_wrap[1] += min(pre_game[0],pre_appea[2],pre_usage[1])
+        pref_case_wrap[1] += min(pre_game[0],pre_appea[2],pre_usage[2])
+
+        pref_case_wrap[5] += min(pre_game[1],pre_appea[0],pre_usage[0])
+        pref_case_wrap[5] += min(pre_game[1],pre_appea[0],pre_usage[1])
+        pref_case_wrap[0] += min(pre_game[1],pre_appea[0],pre_usage[2])
+        pref_case_wrap[4] += min(pre_game[1],pre_appea[1],pre_usage[0])
+        pref_case_wrap[3] += min(pre_game[1],pre_appea[1],pre_usage[1])
+        pref_case_wrap[5] += min(pre_game[1],pre_appea[1],pre_usage[2])
+        pref_case_wrap[3] += min(pre_game[1],pre_appea[2],pre_usage[0])
+        pref_case_wrap[2] += min(pre_game[1],pre_appea[2],pre_usage[1])
+        pref_case_wrap[1] += min(pre_game[1],pre_appea[2],pre_usage[2])
+
+        pref_case_wrap[4] += min(pre_game[2],pre_appea[0],pre_usage[0])
+        pref_case_wrap[5] += min(pre_game[2],pre_appea[0],pre_usage[1])
+        pref_case_wrap[5] += min(pre_game[2],pre_appea[0],pre_usage[2])
+        pref_case_wrap[4] += min(pre_game[2],pre_appea[1],pre_usage[0])
+        pref_case_wrap[4] += min(pre_game[2],pre_appea[1],pre_usage[1])
+        pref_case_wrap[5] += min(pre_game[2],pre_appea[1],pre_usage[2])
+        pref_case_wrap[3] += min(pre_game[2],pre_appea[2],pre_usage[0])
+        pref_case_wrap[3] += min(pre_game[2],pre_appea[2],pre_usage[1])
+        pref_case_wrap[5] += min(pre_game[2],pre_appea[2],pre_usage[2])
+        
+        max_vec = pref_case_wrap.index(max(pref_case_wrap))
+        
+        pref_case[0] = pref_case_wrap[5]*0.5+pref_case_wrap[4] + pref_case_wrap[3]*0.5
+        pref_case[1] = pref_case_wrap[1]*0.5+pref_case_wrap[2] + pref_case_wrap[3]*0.5
+        pref_case[2] = pref_case_wrap[0] + pref_case_wrap[1]*0.5+pref_case_wrap[5]*0.5
+
         # 这里输出的prefer_case就是最后专家系统的输出参数。
 
-        return prefer_case
+        return pref_case
 
     def smooth(self,case):
         ''' 

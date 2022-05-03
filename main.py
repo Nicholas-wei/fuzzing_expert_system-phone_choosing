@@ -2,8 +2,9 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 
-from test import Ui_MainWindow as welcome_ui
-from choose_phone import Ui_Dialog as choose_ui
+from test2 import Ui_MainWindow as welcome_ui
+from choose_phone2 import Ui_Dialog as choose_ui
+from add_phone2 import Ui_Dialog as add_ui
 from phoneresult import Ui_Dialog as phone_result
 
 import expert_system
@@ -23,7 +24,6 @@ class MainWindow(QtWidgets.QMainWindow, welcome_ui):
         super(MainWindow,self).__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.show_choose) # 将按钮连接到发送信号
-        self.pushButton_2.clicked.connect(self.show_all)
         self.pushButton_3.clicked.connect(self.add_phone)
     def show_choose(self):
         self.choose_signal.emit() # 发出信号
@@ -32,6 +32,92 @@ class MainWindow(QtWidgets.QMainWindow, welcome_ui):
     def add_phone(self):
         self.add_signal.emit()
 
+
+class AddWindow(QtWidgets.QDialog,add_ui):
+    name = ""
+    price = ""
+    power = ""
+    ram = ""
+    rom = ""
+    screen_size = ""
+    cpuname_mark = ""
+    resolution = ""
+    charge = ""
+    refresh_rate = ""
+    thick = ""
+    weight= ""
+    brand = ""
+    remark = ""
+    add_case = [0,0,0,0,0] # 5G,曲面屏，NFC，typec, 游戏款
+    tmp_list = []
+    def __init__(self):
+        super(AddWindow,self).__init__()
+        self.setupUi(self)
+        '''
+        绑定选项和局部变量
+        '''
+        self.checkBox.toggled.connect(lambda:self.feature(self.checkBox))
+        self.checkBox_2.toggled.connect(lambda:self.feature(self.checkBox_2))
+        self.checkBox_3.toggled.connect(lambda:self.feature(self.checkBox_3))
+        self.checkBox_4.toggled.connect(lambda:self.feature(self.checkBox_4))
+        self.checkBox_5.toggled.connect(lambda:self.feature(self.checkBox_5))
+        self.textEdit.textChanged.connect(lambda:self.text_changed(self.textEdit))
+        self.textEdit_2.textChanged.connect(lambda:self.text_changed(self.textEdit_2))
+        self.textEdit_3.textChanged.connect(lambda:self.text_changed(self.textEdit_3))
+        self.textEdit_4.textChanged.connect(lambda:self.text_changed(self.textEdit_4))
+        self.textEdit_5.textChanged.connect(lambda:self.text_changed(self.textEdit_5))
+        self.textEdit_6.textChanged.connect(lambda:self.text_changed(self.textEdit_6))
+        self.textEdit_7.textChanged.connect(lambda:self.text_changed(self.textEdit_7))
+        self.textEdit_8.textChanged.connect(lambda:self.text_changed(self.textEdit_8))
+        self.textEdit_9.textChanged.connect(lambda:self.text_changed(self.textEdit_9))
+        self.textEdit_10.textChanged.connect(lambda:self.text_changed(self.textEdit_10))
+        self.textEdit_11.textChanged.connect(lambda:self.text_changed(self.textEdit_11))
+        self.textEdit_12.textChanged.connect(lambda:self.text_changed(self.textEdit_12))
+        self.textEdit_13.textChanged.connect(lambda:self.text_changed(self.textEdit_13))
+        self.textEdit_14.textChanged.connect(lambda:self.text_changed(self.textEdit_14))
+
+    def feature(self,btn):
+        if btn.objectName() == "checkBox":
+            AddWindow.add_case[0]^=1
+            print("0 choosed: 0 is %d" % AddWindow.add_case[0])
+        if btn.objectName() == "checkBox_2":
+            AddWindow.add_case[1]^=1
+        if btn.objectName() == "checkBox_3":
+            AddWindow.add_case[2]^=1
+        if btn.objectName() == "checkBox_4":
+            AddWindow.add_case[3]^=1
+        if btn.objectName() == "checkBox_5":
+            AddWindow.add_case[4]^=1
+    def text_changed(self,btn):
+        if btn.objectName() == "textEdit":
+            self.name = btn.toPlainText()
+            # print(self.name)
+        elif btn.objectName() == "textEdit_2":
+            self.price = btn.toPlainText()
+        elif btn.objectName() == "textEdit_3":
+            self.power = btn.toPlainText()
+        elif btn.objectName() == "textEdit_4":
+            self.ram = btn.toPlainText()
+        elif btn.objectName() == "textEdit_5":
+            self.rom = btn.toPlainText()
+        elif btn.objectName() == "textEdit_6":
+            self.screen_size = btn.toPlainText()
+        elif btn.objectName() == "textEdit_7":
+            self.resolution = btn.toPlainText()
+        elif btn.objectName() == "textEdit_8":
+            self.charge = btn.toPlainText()
+        elif btn.objectName() == "textEdit_9":
+            self.refresh_rate = btn.toPlainText()
+        elif btn.objectName() == "textEdit_10":
+            self.thick = btn.toPlainText()
+        elif btn.objectName() == "textEdit_11":
+            self.weight = btn.toPlainText()
+        elif btn.objectName() == "textEdit_12":
+            self.brand = btn.toPlainText()
+        elif btn.objectName() == "textEdit_13":
+            self.cpuname_mark = btn.toPlainText()
+        elif btn.objectName() == "textEdit_14":
+            self.remark = btn.toPlainText()
 
 
 
@@ -233,7 +319,7 @@ class Controller:
     def show_welcome(self):
         self.main = MainWindow()
         self.main.choose_signal.connect(self.show_choose)
-        self.main.all_signal.connect(self.show_all)
+        # self.main.all_signal.connect(self.show_all)
         self.main.add_signal.connect(self.add_phone)
         self.main.show()
 
@@ -255,8 +341,23 @@ class Controller:
         pass
     
     def add_phone(self):
-        pass
+        self.add = AddWindow()
+        self.main.close()
+        self.add.show()
+        self.add.buttonBox.accepted.connect(self.write_argu)
+        self.add.buttonBox.rejected.connect(self.show_welcome)
 
+    
+    def write_argu(self):
+        '''
+        将结果写入excel文档
+        用类参数作为参数传递
+        '''
+        feature = self.add
+        phone_class.all_phone.add_phone(feature.name,feature.price,feature.power,feature.ram,feature.rom,feature.screen_size,feature.cpuname_mark,feature.resolution,feature.charge,feature.refresh_rate,feature.thick,feature.weight,feature.brand,feature.remark,feature.add_case)
+        self.main.show()
+
+        
     def compute_score(self):
         # 每次点击的时候会自动发出信号
         print("you pressed ok") # 点击选择界面的ok按钮触发

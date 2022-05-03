@@ -1,6 +1,9 @@
 import xlrd
+import xlwt
+from xlutils.copy import copy
 MAXPHONE=100 # 最多支持100部手机
 from functools import cmp_to_key
+path = 'E:\data.xls'
 
 
 def cmp(a,b):
@@ -104,6 +107,22 @@ class phone_class():
         print("手机价格" + self.price)
 
 
+def write_excel_xls_append(path, value):
+    index = len(value)  # 获取需要写入数据的行数
+    workbook = xlrd.open_workbook(path)  # 打开工作簿
+    sheets = workbook.sheet_names()  # 获取工作簿中的所有表格
+    worksheet = workbook.sheet_by_name(sheets[0])  # 获取工作簿中所有表格中的的第一个表格
+    rows_old = worksheet.nrows  # 获取表格中已存在的数据的行数
+    new_workbook = copy(workbook)  # 将xlrd对象拷贝转化为xlwt对象
+    new_worksheet = new_workbook.get_sheet(0)  # 获取转化后工作簿中的第一个表格
+    for i in range(0, index):
+        for j in range(0, len(value[i])):
+            new_worksheet.write(i+rows_old, j, value[i][j])  # 追加写入数据，注意是从i+rows_old行开始写入
+    new_workbook.save(path)  # 保存工作簿
+    print("xls格式表格【追加】写入数据成功！")
+
+
+
 class all_phone:
     all = []
     med_ram = 0
@@ -116,6 +135,9 @@ class all_phone:
     med_rom = 0
     med_resolution = 0
     med_charging = 0
+
+
+
     def read_all_phone(self):
         ''' 
         从excel文件中读取所有行中的手机，储存在all数组中
@@ -263,7 +285,43 @@ class all_phone:
             item.Z = item.Z * case[2] # 实用指数
         print("处理推荐指数完成")
 
-    
+    def add_phone(name,price,power,ram,rom,screen_size,cpuname_mark,resolution,charge,refresh_rate,thick,weight,brand,remark,add_case):
+        fourG_or_5G = ""
+        curve_screen = ""
+        typec = ""
+        nfc = ""
+        game = ""
+        cpu_name = ""
+        cpu_mark = ""
+        tmp = [0,0]
+        if(add_case[0] == 1):
+            fourG_or_5G = "5G"
+        else:
+            fourG_or_5G = "4G"
+        if(add_case[1]==1):
+            curve_screen = "1"
+        else:
+            curve_screen = "0"
+        if(add_case[2] == 1):
+            nfc = "1"
+        else:
+            nfc = "0"
+        if(add_case[3] == 1):
+            typec = "1"
+        else:
+            typec = "0"
+        if(add_case[4] == 1):
+            game = "1"
+        else:
+            game = "0"
+        tmp = cpuname_mark.split('/')
+        cpu_name = tmp[0]
+        cpu_mark = tmp[1]
+        value = [name,price,power,ram,rom,screen_size,'no',resolution,charge,'0',fourG_or_5G,refresh_rate,curve_screen,thick,weight,brand,cpu_name,cpu_mark,nfc,typec,game,remark]
+        all = []
+        all.append(value)
+        write_excel_xls_append(path,all)
+        #pass
 
 
     def wrap_arrange(self,case,budget,G5,curve,icon_case,nfc):
@@ -302,21 +360,25 @@ class all_phone:
                 # 要求5G
                 if(item.band_width != '5G'):
                     result_case.remove(item)
+                    continue
 
             if(curve == 1):
                 # 要求曲面屏
                 if(item.curve!=1):
                     result_case.remove(item)
+                    continue
 
             if(nfc == 1):
                 # 要求nfc
                 if(item.NFC !=1):
                     result_case.remove(item)
+                    continue
 
             if(len(icon_case)!=0):
                 # 去除相应品牌
                 if(item.icon in icon_case):
                     result_case.remove(item)
+                    continue
 
         # 最后得到result_case，将其按照得分高度排序,只推荐得分最高的
         for item in result_case:
@@ -330,11 +392,11 @@ class all_phone:
 
 
 
-if __name__ == "__main__":
-    all_phone_class = all_phone()
-    all_phone_class.read_all_phone()
-    # print(all_phone_class._all_phone__CPU_medium())
-    all_phone_class.set_all_medium()
-    all_phone_class.calculate_all_argument()
-    all_phone_class.output_mark()
+#if __name__ == "__main__":
+#    all_phone_class = all_phone()
+#    all_phone_class.read_all_phone()
+#    # print(all_phone_class._all_phone__CPU_medium())
+#    all_phone_class.set_all_medium()
+#    all_phone_class.calculate_all_argument()
+#    all_phone_class.output_mark()
 
